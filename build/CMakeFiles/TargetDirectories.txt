@@ -1,0 +1,3 @@
+/home/root123456/GatewayFinal/build/CMakeFiles/my_gateway.dir
+/home/root123456/GatewayFinal/build/CMakeFiles/edit_cache.dir
+/home/root123456/GatewayFinal/build/CMakeFiles/rebuild_cache.dir

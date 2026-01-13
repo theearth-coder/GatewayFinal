@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+logs/*.log
+logs/audit.log
+data/*.json
+run/proxy.pid
+.DS_Store

@@ -1,0 +1,18 @@
+# 编译产物
+build/
+*.o
+*.so
+proxy_server
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+
+# 临时文件
+*.swp
+*.tmp
+.DS_Store
+.vscode/
+.idea/
+
+# 日志文件
+*.log

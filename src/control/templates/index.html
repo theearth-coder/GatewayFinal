@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Control Plane 控制台（角色C）</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">C</div>
+      <div>
+        <div class="title">Control Plane 控制台</div>
+        <div class="subtitle">服务发现模拟 · 动态注册 · 配置管理 · SIGHUP 热重载触发</div>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="btnRefresh" class="btn">刷新</button>
+      <button id="btnSync" class="btn btn-secondary">手动同步</button>
+      <button id="btnTailAudit" class="btn">查看审计日志</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <div class="card-title">后端节点列表</div>
+      <div class="hint">
+        修改权重后会写入 <code>control/config/proxy_config.json</code> 并尝试向代理进程发送 <code>SIGHUP</code>（需要 <code>run/proxy.pid</code> 存在）。
+      </div>
+
+      <div class="toolbar">
+        <input id="filterInput" class="input" placeholder="过滤：IP 或端口" />
+        <button id="btnPing" class="btn btn-secondary">Ping 工具</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="backendTable">
+          <thead>
+            <tr>
+              <th>IP</th>
+              <th>Port</th>
+              <th>Weight</th>
+              <th>GPU</th>
+              <th>VRAM</th>
+              <th>Enabled</th>
+              <th>Warming</th>
+              <th>Source</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div id="status" class="status"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">日志 / 输出</div>
+
+      <!-- 这里加一个小工具栏：tail 行数 + 拉取按钮 -->
+      <div class="toolbar">
+        <input id="tailLines" class="input input-small" value="100" type="number" min="10" max="2000" />
+        <button id="btnLoadAudit" class="btn btn-secondary">加载 audit.log</button>
+        <span class="hint" style="margin:0">（默认末尾 100 行）</span>
+      </div>
+
+      <pre id="logBox" class="logbox">点击右上角“查看审计日志”或使用 Ping 工具…</pre>
+    </section>
+  </main>
+
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-title">Ping 工具</div>
+      <div class="modal-body">
+        <label class="label">目标 IP（只填 IP，不要端口）</label>
+        <input id="pingIp" class="input" placeholder="例如：10.0.0.11" />
+        <div class="modal-actions">
+          <button id="btnDoPing" class="btn">开始 Ping</button>
+          <button id="btnClose" class="btn btn-secondary">关闭</button>
+        </div>
+        <pre id="pingOut" class="logbox small"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/main.js"></script>
+</body>
+</html>

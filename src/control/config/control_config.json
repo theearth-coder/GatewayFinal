@@ -1,0 +1,15 @@
+{
+  "host": "0.0.0.0",
+  "port": 8080,
+
+  "proxy_pid_path": "../run/proxy.pid",
+  "audit_log_path": "../logs/audit.log",
+
+  "k8s_endpoints_path": "data/k8s_endpoints.json",
+  "runtime_backends_path": "data/backends_runtime.json",
+  "proxy_config_path": "config/proxy_config.json",
+
+  "default_listen_host": "0.0.0.0",
+  "default_listen_port": 10080,
+  "default_algorithm": "weighted_round_robin"
+}

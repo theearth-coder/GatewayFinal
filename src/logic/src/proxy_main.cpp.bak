@@ -1,0 +1,48 @@
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include "backend_server.h"
+#include "load_balancer.h"
+#include "http_parser.h"
+
+int main() {
+    std::cout << "=== 角色B - TCP代理服务器核心功能演示 ===" << std::endl;
+
+    // 1. 初始化负载均衡器（GPU感知模式）
+    LoadBalancer lb(LoadBalanceType::GPU_AWARE);
+    // 添加3个测试后端节点
+    lb.addBackend(BackendServer("127.0.0.1", 8081));
+    lb.addBackend(BackendServer("127.0.0.1", 8082));
+    lb.addBackend(BackendServer("127.0.0.1", 8083));
+
+    // 等待5秒，让后端节点完成预热（预热期权重为0，无法选中）
+    std::cout << "等待后端节点预热完成...（5秒）" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+
+    // 2. 模拟选择后端节点（GPU感知算法）
+    BackendServer* selected = lb.selectBackend();
+    if (selected) {
+        std::cout << "✅ GPU感知调度选中节点：" << selected->ip << ":" << selected->port << std::endl;
+    } else {
+        std::cout << "❌ 暂无可用后端节点" << std::endl;
+    }
+
+    // 3. 模拟HTTP请求解析
+    HttpParser parser;
+    std::string raw_http = "GET /api/test HTTP/1.1\r\nHost: localhost\r\n\r\n";
+    HttpRequest request;
+    if (parser.parse(raw_http, request)) {
+        std::cout << "✅ HTTP解析成功：" << request.method << " " << request.path << std::endl;
+    } else {
+        std::cout << "❌ HTTP解析失败" << std::endl;
+    }
+
+    // 4. 模拟会话保持（同一IP始终选同一节点）
+    BackendServer* sticky_node = lb.selectByClientIP("192.168.1.100");
+    if (sticky_node) {
+        std::cout << "✅ 会话保持（192.168.1.100）选中节点：" << sticky_node->ip << ":" << sticky_node->port << std::endl;
+    }
+
+    std::cout << "=== 演示完成 ===" << std::endl;
+    return 0;
+}
